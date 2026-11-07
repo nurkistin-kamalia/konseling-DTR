@@ -1,0 +1,794 @@
+    .custom-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #4f46e5;
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba(79, 70, 229, 0.4);
+        transition: all 0.2s ease;
+    }
+    .custom-slider::-webkit-slider-thumb:hover {
+        transform: scale(1.15);
+    }
+</style>
+
+
+<!-- TOP APP HEADER -->
+<header class="bg-white/90 backdrop-blur-md border-b border-indigo-50 sticky top-0 z-40 soft-shadow">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-indigo-500 text-white flex items-center justify-center font-bold text-xl shadow-md shadow-indigo-200">
+                <i class="fa-solid fa-brain"></i>
+            </div>
+            <div>
+                <h1 class="text-base sm:text-lg font-black text-slate-800 leading-tight">Sahabat Pikiran</h1>
+                <p class="text-[11px] text-indigo-600 font-bold flex items-center gap-1">
+                    <i class="fa-solid fa-user-pen text-[10px]"></i> Pengembang: Nur Kistin Kamalia, S.Psi.
+                </p>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-2">
+            <!-- STUDENT SELECTOR -->
+            <div class="flex items-center bg-indigo-50 border border-indigo-100 px-3 py-1.5 rounded-2xl text-xs font-bold text-indigo-800">
+                <i class="fa-solid fa-user-graduate mr-1.5 text-indigo-600"></i>
+                <select id="studentSelect" onchange="changeStudentProfile()" class="bg-transparent border-none focus:outline-none font-extrabold cursor-pointer">
+                    <option value="S1">Siswa S1</option>
+                    <option value="S2">Siswa S2</option>
+                    <option value="S3">Siswa S3</option>
+                    <option value="S4">Siswa S4</option>
+                    <option value="S5">Siswa S5</option>
+                </select>
+            </div>
+
+            <!-- AUDIO SPEED TOGGLE -->
+            <button onclick="toggleAudioSpeed()" id="speedBtn" class="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl text-xs font-extrabold transition">
+                🔊 <span id="speedLabel">1.0x</span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- NAVIGATION BAR -->
+<nav class="bg-slate-900 text-white shadow-md">
+    <div class="max-w-5xl mx-auto px-2 flex overflow-x-auto py-2 space-x-1 scrollbar-none">
+        <button onclick="switchSession('welcome')" id="nav-sesi-welcome" class="nav-tab px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition bg-indigo-600 text-white">🏠 Beranda</button>
+        <button onclick="switchSession(1)" id="nav-sesi-1" class="nav-tab px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap text-slate-300 hover:text-white">1. Alur Pikiran</button>
+        <button onclick="switchSession(2)" id="nav-sesi-2" class="nav-tab px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap text-slate-300 hover:text-white">2. Tangkap Pikiran</button>
+        <button onclick="switchSession(3)" id="nav-sesi-3" class="nav-tab px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap text-slate-300 hover:text-white">3. Monster Pikiran</button>
+        <button onclick="switchSession(4)" id="nav-sesi-4" class="nav-tab px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap text-slate-300 hover:text-white">4. Detektif Bukti</button>
+        <button onclick="switchSession(5)" id="nav-sesi-5" class="nav-tab px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap text-slate-300 hover:text-white">5. Pikiran Seimbang</button>
+        <button onclick="switchSession(6)" id="nav-sesi-6" class="nav-tab px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap text-slate-300 hover:text-white">6. Rekap & Plan</button>
+        <button onclick="switchSession('journal')" id="nav-sesi-journal" class="nav-tab px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap bg-emerald-700 text-white hover:bg-emerald-600">📖 Jurnal Siswa</button>
+    </div>
+</nav>
+
+<!-- MAIN APP CONTAINER -->
+<main class="max-w-4xl mx-auto px-4 pt-6 flex-grow w-full">
+
+    <!-- WELCOME PAGE -->
+    <section id="session-welcome" class="session-page space-y-6">
+        <div class="bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-50 p-6 md:p-10 rounded-3xl border border-indigo-100 soft-shadow text-center space-y-6 relative overflow-hidden">
+            <div class="absolute -right-10 -top-10 w-40 h-40 bg-indigo-300/30 rounded-full blur-2xl"></div>
+            <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-pink-300/30 rounded-full blur-2xl"></div>
+
+            <span class="inline-block bg-indigo-600 text-white text-xs font-extrabold px-3.5 py-1 rounded-full uppercase tracking-wider shadow-sm">
+                SMP Negeri 1 Kotaanyar
+            </span>
+
+            <!-- SMART MIND LIGHTBULB MASCOT -->
+            <div class="relative w-32 h-32 mx-auto flex items-center justify-center">
+                <div class="absolute inset-0 bg-amber-300/40 rounded-full blur-2xl animate-glow"></div>
+                <div class="relative w-28 h-28 rounded-3xl bg-gradient-to-tr from-amber-400 via-yellow-300 to-indigo-500 p-1 shadow-xl animate-float cursor-pointer transform hover:scale-105 transition" onclick="speakText('Halo! Aku Sahabat Pikiran. Mari kita belajar mengelola pikiran bersama!')">
+                    <div class="w-full h-full bg-slate-900/10 backdrop-blur-sm rounded-2xl flex items-center justify-center relative overflow-hidden">
+                        <svg class="w-20 h-20 text-white drop-shadow-md" viewBox="0 0 100 100" fill="none">
+                            <circle cx="50" cy="50" r="42" fill="#FEF08A" fill-opacity="0.25"/>
+                            <path d="M50 14C31 14 18 27 18 44C18 57 27 67 35 73V82H65V73C73 67 82 57 82 44C82 27 69 14 50 14Z" fill="#FACC15" stroke="#EAB308" stroke-width="2"/>
+                            <rect x="37" y="84" width="26" height="5" rx="2.5" fill="#94A3B8"/>
+                            <rect x="40" y="90" width="20" height="4" rx="2" fill="#64748B"/>
+                            <ellipse cx="36" cy="46" rx="4.5" ry="6" fill="#0F172A"/>
+                            <circle cx="37.5" cy="44.5" r="2" fill="white"/>
+                            <ellipse cx="64" cy="46" rx="4.5" ry="6" fill="#0F172A"/>
+                            <circle cx="65.5" cy="44.5" r="2" fill="white"/>
+                            <ellipse cx="29" cy="53" rx="3.5" ry="2" fill="#FB7185"/>
+                            <ellipse cx="71" cy="53" rx="3.5" ry="2" fill="#FB7185"/>
+                            <path d="M42 56C44.5 61 55.5 61 58 56" stroke="#0F172A" stroke-width="3" stroke-linecap="round"/>
+                            <path d="M50 4L52.5 10L58 12L52.5 14L50 20L47.5 14L42 12L47.5 10Z" fill="#FFF" class="animate-sparkle"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="text-3xl font-black text-slate-800 tracking-tight">Sahabat Pikiran</h2>
+                <p class="text-xs sm:text-sm text-slate-600 font-bold leading-relaxed max-w-xl mx-auto mt-2">
+                    Media Digital Thought Record • Restrukturisasi Kognitif untuk Meningkatkan Rasa Percaya Diri Belajar Siswa SMP Negeri 1 Kotaanyar.
+                </p>
+            </div>
+
+            <div class="pt-3 flex flex-col sm:flex-row justify-center gap-3">
+                <button onclick="speakText('Selamat datang di media Sahabat Pikiran SMP Negeri 1 Kotaanyar. Dikembangkan oleh Nur Kistin Kamalia, S.Psi. Tekan Mulai Konseling untuk melangkah ke sesi pertama!')" class="bg-white hover:bg-slate-50 text-indigo-700 font-extrabold px-5 py-3.5 rounded-2xl text-xs border border-indigo-200 shadow-sm transition">
+                    🔊 Uji Suara Pembaca Audio
+                </button>
+                <button onclick="switchSession(1)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold px-7 py-3.5 rounded-2xl text-xs shadow-md shadow-indigo-200 transition">
+                    🚀 Mulai Konseling (Sesi 1)
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SESSION 1: ALUR PIKIRAN (DRAG & DROP) -->
+    <section id="session-1" class="session-page space-y-5 hidden">
+        <div class="bg-indigo-50 p-5 rounded-3xl border border-indigo-100 flex items-center justify-between">
+            <div>
+                <span class="bg-indigo-600 text-white text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">Sesi 1</span>
+                <h3 class="text-lg font-extrabold text-slate-800 mt-1">Mengenal Hubungan Situasi, Pikiran, Perasaan & Perilaku</h3>
+            </div>
+            <button onclick="speakText('Di Sesi 1, pelajari bagaimana pikiran menentukan perasaan dan tindakanmu melalui permainan kartu berikut.')" class="bg-indigo-600 text-white p-2.5 rounded-xl text-xs font-bold hover:bg-indigo-700">
+                🔊 Petunjuk
+            </button>
+        </div>
+
+        <!-- DRAG & DROP GAME CONTAINER -->
+        <div class="bg-white p-6 rounded-3xl border border-slate-100 soft-shadow space-y-4">
+            <div class="flex items-center justify-between border-b pb-3">
+                <div>
+                    <h4 class="font-extrabold text-slate-800 text-sm">🎮 Permainan Tarik & Lepas Kartu (Drag & Drop)</h4>
+                    <p class="text-[11px] text-slate-500 font-bold">Seret kartu di bawah ini ke kotak kategori yang tepat!</p>
+                </div>
+                <button onclick="resetDragGame()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-3 py-1.5 rounded-xl">🔄 Ulangi Game</button>
+            </div>
+
+            <div class="flex justify-between items-center bg-indigo-50/70 px-4 py-2.5 rounded-2xl text-xs font-extrabold text-indigo-900 border border-indigo-100">
+                <span>Skor Kartu Tepat: <span id="dragScore" class="text-indigo-600 font-black text-sm">0 / 4</span></span>
+                <span id="dragBadge" class="hidden text-emerald-600 font-black">🎉 Sempurna! Kamu memahami alur pikiran.</span>
+            </div>
+
+            <!-- CARDS POOL -->
+            <div id="dragCardPool" class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1"></div>
+
+            <!-- DROP ZONES -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-3">
+                <div id="zone-situasi" ondragover="allowDrop(event)" ondrop="handleDrop(event, 'situasi')" onclick="handleZoneClick('situasi')" class="p-3.5 rounded-2xl border-2 border-dashed border-sky-300 bg-sky-50/60 min-h-[100px] cursor-pointer transition hover:bg-sky-100/50">
+                    <span class="text-[11px] font-black text-sky-800 block uppercase tracking-wider">📍 1. SITUASI</span>
+                    <div class="zone-content pt-2 text-[11px] text-sky-400 font-bold italic">Tempel Kartu Situasi</div>
+                </div>
+
+                <div id="zone-pikiran" ondragover="allowDrop(event)" ondrop="handleDrop(event, 'pikiran')" onclick="handleZoneClick('pikiran')" class="p-3.5 rounded-2xl border-2 border-dashed border-purple-300 bg-purple-50/60 min-h-[100px] cursor-pointer transition hover:bg-purple-100/50">
+                    <span class="text-[11px] font-black text-purple-800 block uppercase tracking-wider">🧠 2. PIKIRAN</span>
+                    <div class="zone-content pt-2 text-[11px] text-purple-400 font-bold italic">Tempel Kartu Pikiran</div>
+                </div>
+
+                <div id="zone-perasaan" ondragover="allowDrop(event)" ondrop="handleDrop(event, 'perasaan')" onclick="handleZoneClick('perasaan')" class="p-3.5 rounded-2xl border-2 border-dashed border-rose-300 bg-rose-50/60 min-h-[100px] cursor-pointer transition hover:bg-rose-100/50">
+                    <span class="text-[11px] font-black text-rose-800 block uppercase tracking-wider">❤️ 3. PERASAAN</span>
+                    <div class="zone-content pt-2 text-[11px] text-rose-400 font-bold italic">Tempel Kartu Perasaan</div>
+                </div>
+
+                <div id="zone-perilaku" ondragover="allowDrop(event)" ondrop="handleDrop(event, 'perilaku')" onclick="handleZoneClick('perilaku')" class="p-3.5 rounded-2xl border-2 border-dashed border-emerald-300 bg-emerald-50/60 min-h-[100px] cursor-pointer transition hover:bg-emerald-100/50">
+                    <span class="text-[11px] font-black text-emerald-800 block uppercase tracking-wider">🚶 4. PERILAKU</span>
+                    <div class="zone-content pt-2 text-[11px] text-emerald-400 font-bold italic">Tempel Kartu Perilaku</div>
+                </div>
+            </div>
+
+            <div class="flex justify-end pt-3">
+                <button onclick="switchSession(2)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold px-6 py-3 rounded-2xl text-xs shadow-md shadow-indigo-200 transition">
+                    Lanjut ke Sesi 2 ➔
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SESSION 2: TANGKAP PIKIRAN -->
+    <section id="session-2" class="session-page space-y-5 hidden">
+        <div class="bg-sky-50 p-5 rounded-3xl border border-sky-100">
+            <span class="bg-sky-600 text-white text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">Sesi 2</span>
+            <h3 class="text-lg font-extrabold text-slate-800 mt-1">Menangkap Situasi & Pikiran Otomatis</h3>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl border border-slate-100 soft-shadow space-y-4">
+            <div>
+                <label class="text-xs font-extrabold text-slate-700 block mb-2">Pilih atau Tulis Situasi Pemicu Rasa Cemas Belajar:</label>
+                <div class="grid grid-cols-2 gap-2 text-xs font-bold mb-2">
+                    <button onclick="selectPresetSituation('Membaca di Depan Kelas')" class="p-3 bg-slate-50 hover:bg-sky-50 border border-slate-200 rounded-xl text-left transition">📖 Membaca di Kelas</button>
+                    <button onclick="selectPresetSituation('Menulis di Papan Tulis')" class="p-3 bg-slate-50 hover:bg-sky-50 border border-slate-200 rounded-xl text-left transition">✍️ Menulis di Papan</button>
+                </div>
+                <div class="relative">
+                    <input type="text" id="inputSituasi" placeholder="Atau ketik situasimu sendiri..." class="w-full p-3.5 bg-slate-50 border rounded-2xl font-bold text-xs pr-12 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                    <button onclick="startVoiceInput('inputSituasi')" class="absolute right-2 top-2 p-2 bg-rose-500 hover:bg-rose-600 text-white rounded-xl text-xs shadow-sm" title="Bicara dengan Mikrofon">
+                        <i class="fa-solid fa-microphone"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div>
+                <label class="text-xs font-extrabold text-slate-700 block mb-2">Pikiran Buruk Otomatis Yang Melintas:</label>
+                <div class="relative">
+                    <textarea id="inputPikiranAwal" rows="3" placeholder="Contoh: Aku pasti salah membaca kata dan semua teman tertawa..." class="w-full p-3.5 bg-slate-50 border rounded-2xl font-bold text-xs pr-12 focus:ring-2 focus:ring-sky-500 focus:outline-none"></textarea>
+                    <button onclick="startVoiceInput('inputPikiranAwal')" class="absolute right-2 top-2 p-2 bg-rose-500 hover:bg-rose-600 text-white rounded-xl text-xs shadow-sm" title="Bicara dengan Mikrofon">
+                        <i class="fa-solid fa-microphone"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex justify-end pt-2">
+                <button onclick="switchSession(3)" class="bg-sky-600 hover:bg-sky-700 text-white font-extrabold px-6 py-3 rounded-2xl text-xs shadow-md transition">
+                    Lanjut Kenali Monster ➔
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SESSION 3: MONSTER PIKIRAN -->
+    <section id="session-3" class="session-page space-y-5 hidden">
+        <div class="bg-rose-50 p-5 rounded-3xl border border-rose-100">
+            <span class="bg-rose-600 text-white text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">Sesi 3</span>
+            <h3 class="text-lg font-extrabold text-slate-800 mt-1">Mengenali Monster Pikiran (Distorsi Kognitif)</h3>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-bold">
+            <div onclick="selectMonster('Si Pelabel')" class="p-4 bg-white border-2 border-slate-100 rounded-2xl cursor-pointer hover:border-rose-400 transition soft-shadow">
+                <span class="text-2xl">🏷️</span>
+                <h5 class="font-black text-slate-800 text-sm mt-1">Si Pelabel</h5>
+                <p class="text-[11px] text-slate-500 font-semibold">Memberi julukan buruk pada diri sendiri ("Aku memang bodoh").</p>
+            </div>
+
+            <div onclick="selectMonster('Si Pukul Rata')" class="p-4 bg-white border-2 border-slate-100 rounded-2xl cursor-pointer hover:border-rose-400 transition soft-shadow">
+                <span class="text-2xl">🧹</span>
+                <h5 class="font-black text-slate-800 text-sm mt-1">Si Pukul Rata</h5>
+                <p class="text-[11px] text-slate-500 font-semibold">Menganggap 1 kesalahan kecil berlaku selamanya ("Aku gak pernah bisa").</p>
+            </div>
+
+            <div onclick="selectMonster('Peramal Bencana')" class="p-4 bg-white border-2 border-slate-100 rounded-2xl cursor-pointer hover:border-rose-400 transition soft-shadow">
+                <span class="text-2xl">💥</span>
+                <h5 class="font-black text-slate-800 text-sm mt-1">Peramal Bencana</h5>
+                <p class="text-[11px] text-slate-500 font-semibold">Membayangkan kejadian terburuk yang belum terjadi ("Pasti hancur").</p>
+            </div>
+
+            <div onclick="selectMonster('Pembaca Pikiran')" class="p-4 bg-white border-2 border-slate-100 rounded-2xl cursor-pointer hover:border-rose-400 transition soft-shadow">
+                <span class="text-2xl">🔮</span>
+                <h5 class="font-black text-slate-800 text-sm mt-1">Pembaca Pikiran</h5>
+                <p class="text-[11px] text-slate-500 font-semibold">Yakin orang lain berpikiran negatif tentang kita tanpa bukti.</p>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl border border-slate-100 soft-shadow space-y-4">
+            <div class="flex justify-between items-center text-xs font-extrabold">
+                <span>Monster Terpilih: <strong id="selectedMonsterDisplay" class="text-rose-600 font-black text-sm">Si Pelabel</strong></span>
+                <span>Tingkat Keyakinan Pikiran Buruk: <strong id="beliefValueDisplay" class="text-indigo-600 font-black text-sm">90%</strong></span>
+            </div>
+            <input type="range" id="beliefSlider" min="0" max="100" value="90" oninput="updateBeliefValue(this.value)" class="w-full h-2 bg-slate-200 rounded-lg custom-slider">
+            <div class="flex justify-end pt-2">
+                <button onclick="switchSession(4)" class="bg-rose-600 hover:bg-rose-700 text-white font-extrabold px-6 py-3 rounded-2xl text-xs shadow-md transition">
+                    Lanjut Uji Bukti Detektif ➔
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SESSION 4: DETEKTIF BUKTI -->
+    <section id="session-4" class="session-page space-y-5 hidden">
+        <div class="bg-amber-50 p-5 rounded-3xl border border-amber-100">
+            <span class="bg-amber-600 text-white text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">Sesi 4 • Detektif Bukti</span>
+            <h3 class="text-lg font-extrabold text-slate-800 mt-1">Mengumpulkan Bukti Nyata (Mendukung vs Menentang)</h3>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl border border-slate-100 soft-shadow space-y-4">
+            <div>
+                <label class="text-xs font-extrabold text-slate-700 block mb-2">Pilih 1 dari 4 Situasi untuk Dibacakan Buktinya secara Lengkap:</label>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs font-bold">
+                    <button onclick="selectDetectivePreset(1)" class="p-3 bg-slate-50 hover:bg-amber-50 border border-slate-200 rounded-2xl text-left transition">📖 1. Membaca di Kelas</button>
+                    <button onclick="selectDetectivePreset(2)" class="p-3 bg-slate-50 hover:bg-amber-50 border border-slate-200 rounded-2xl text-left transition">✍️ 2. Menulis di Papan Tulis</button>
+                    <button onclick="selectDetectivePreset(3)" class="p-3 bg-slate-50 hover:bg-amber-50 border border-slate-200 rounded-2xl text-left transition">📝 3. Mengerjakan Kuis / Ujian</button>
+                    <button onclick="selectDetectivePreset(4)" class="p-3 bg-slate-50 hover:bg-amber-50 border border-slate-200 rounded-2xl text-left transition">🙋‍♂️ 4. Menjawab Pertanyaan Guru</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                <div>
+                    <label class="text-xs font-extrabold text-rose-700 block mb-1">Bukti Mendukung Pikiran Buruk:</label>
+                    <textarea id="inputBuktiMendukung" rows="3" class="w-full p-3 bg-slate-50 border rounded-2xl font-bold text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none"></textarea>
+                </div>
+                <div>
+                    <label class="text-xs font-extrabold text-emerald-700 block mb-1">Bukti Menentang (Fakta Baik Nyata):</label>
+                    <textarea id="inputBuktiMenentang" rows="3" class="w-full p-3 bg-slate-50 border rounded-2xl font-bold text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none"></textarea>
+                </div>
+            </div>
+
+            <div class="flex justify-end pt-2">
+                <button onclick="switchSession(5)" class="bg-amber-600 hover:bg-amber-700 text-white font-extrabold px-6 py-3 rounded-2xl text-xs shadow-md transition">
+                    Lanjut ke Zona Hijau ➔
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SESSION 5: PIKIRAN SEIMBANG -->
+    <section id="session-5" class="session-page space-y-5 hidden">
+        <div class="bg-emerald-50 p-5 rounded-3xl border border-emerald-100">
+            <span class="bg-emerald-600 text-white text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">Sesi 5 • Zona Hijau</span>
+            <h3 class="text-lg font-extrabold text-slate-800 mt-1">Beralih ke Pikiran Seimbang (Alternative Thought)</h3>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl border border-slate-100 soft-shadow space-y-4">
+            <div class="flex justify-between items-center">
+                <label class="text-xs font-extrabold text-emerald-800 block">Formulasi Pikiran Seimbang Baru:</label>
+                <button onclick="generateBalancedThoughtSuggestion()" class="text-[11px] bg-emerald-100 hover:bg-emerald-200 font-extrabold text-emerald-800 px-3 py-1 rounded-xl">💡 Gunakan Contoh</button>
+            </div>
+            <textarea id="inputPikiranSeimbang" rows="3" class="w-full p-3.5 bg-emerald-50/50 border border-emerald-200 rounded-2xl font-bold text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none"></textarea>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 text-xs font-bold">
+                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-2">
+                    <span class="block text-slate-700 font-extrabold">Ukur Ulang Keyakinan Pikiran Buruk:</span>
+                    <input type="range" id="reBeliefSlider" min="0" max="100" value="30" oninput="document.getElementById('reBeliefAfterVal').innerText = this.value + '%'" class="w-full h-2 bg-slate-200 rounded-lg custom-slider">
+                    <span id="reBeliefAfterVal" class="text-emerald-600 font-black text-sm">30%</span>
+                </div>
+
+                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-2">
+                    <span class="block text-slate-700 font-extrabold">Ukur Ulang Skala Emosi Negatif (1-10):</span>
+                    <input type="range" id="reEmoSlider" min="0" max="10" value="3" oninput="document.getElementById('reEmoAfterVal').innerText = this.value + '/10'" class="w-full h-2 bg-slate-200 rounded-lg custom-slider">
+                    <span id="reEmoAfterVal" class="text-emerald-600 font-black text-sm">3/10</span>
+                </div>
+            </div>
+
+            <div class="flex justify-end pt-2">
+                <button onclick="switchSession(6)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-6 py-3 rounded-2xl text-xs shadow-md transition">
+                    Lanjut ke Rekapitulasi ➔
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SESSION 6: REKAP & PLAN -->
+    <section id="session-6" class="session-page space-y-5 hidden">
+        <div class="bg-purple-50 p-5 rounded-3xl border border-purple-100">
+            <span class="bg-purple-600 text-white text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">Sesi 6</span>
+            <h3 class="text-lg font-extrabold text-slate-800 mt-1">Rekapitulasi & Rencana Tindak Lanjut (Coping Plan)</h3>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl border border-slate-100 soft-shadow space-y-5">
+            <h4 class="font-black text-xs text-slate-700 uppercase tracking-wider">📊 Grafik Perbandingan Perubahan Keyakinan:</h4>
+            <div class="w-full h-56">
+                <canvas id="progressChart"></canvas>
+            </div>
+
+            <div class="bg-purple-50/50 p-4 rounded-2xl border border-purple-100 space-y-3">
+                <h5 class="font-extrabold text-xs text-purple-900">⚡ Rencana Aksi Koping (Jika ... Maka ...):</h5>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-bold">
+                    <div>
+                        <label class="block text-[11px] text-slate-500 mb-1">JIKA (Situasi cemas datang):</label>
+                        <input type="text" id="planJika" value="Jika saya diminta membaca di depan kelas" class="w-full p-3 bg-white border rounded-xl font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-slate-500 mb-1">MAKA (Tindakan kopingku):</label>
+                        <input type="text" id="planMaka" value="Saya akan menarik napas dalam & gunakan pikiran seimbang" class="w-full p-3 bg-white border rounded-xl font-bold">
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-2 flex flex-wrap gap-2.5">
+                <button onclick="saveRecordToJournal()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold px-5 py-3 rounded-2xl text-xs shadow-md shadow-indigo-200 transition">
+                    💾 Simpan Ke Jurnal
+                </button>
+                <button onclick="switchSession('journal')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-5 py-3 rounded-2xl text-xs shadow-md transition">
+                    📖 Lihat Halaman Jurnal
+                </button>
+                <button onclick="printStudentReport(currentStudent)" class="bg-amber-500 hover:bg-amber-600 text-white font-extrabold px-5 py-3 rounded-2xl text-xs shadow-md transition">
+                    🖨️ Cetak / PDF Laporan Resmi
+                </button>
+            </div>
+        </div>
+
+        <!-- BOTTOM NAVIGATION BAR FOR SESSION 6 -->
+        <div class="bg-white p-4 sm:p-5 rounded-3xl border border-slate-100 soft-shadow flex flex-col sm:flex-row items-center justify-between gap-3">
+            <button onclick="switchSession('welcome')" class="w-full sm:w-auto bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold px-5 py-3 rounded-2xl text-xs transition">
+                🏠 Kembali ke Beranda
+            </button>
+            <div class="flex items-center gap-2 w-full sm:w-auto">
+                <button onclick="switchSession(1)" class="w-full sm:w-auto bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-extrabold px-5 py-3 rounded-2xl text-xs border border-indigo-200 transition">
+                    🔄 Ulangi Dari Sesi 1
+                </button>
+                <button onclick="switchSession('journal')" class="w-full sm:w-auto bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold px-6 py-3 rounded-2xl text-xs shadow-md transition">
+                    📖 Buka Halaman Jurnal ➔
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- JOURNAL PAGE -->
+    <section id="session-journal" class="session-page space-y-5 hidden">
+        <div class="bg-emerald-50 p-5 rounded-3xl border border-emerald-100 flex justify-between items-center">
+            <div>
+                <h3 class="text-lg font-extrabold text-slate-800">Catatan Jurnal Rekapitulasi (${currentStudent})</h3>
+                <p class="text-xs text-slate-500 font-bold">Data tersimpan secara otomatis di Penyimpanan Awan & Browser.</p>
+            </div>
+            <button onclick="printStudentReport(currentStudent)" class="bg-amber-500 hover:bg-amber-600 text-white font-extrabold px-4 py-2 rounded-xl text-xs shadow-sm">
+                🖨️ Cetak PDF Laporan
+            </button>
+        </div>
+
+        <div id="journalContainer" class="space-y-3"></div>
+    </section>
+
+</main>
+
+<!-- TOAST NOTIFICATION -->
+<div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white px-5 py-3 rounded-2xl text-xs font-extrabold shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center space-x-2">
+    <span id="toastMsg">Notifikasi</span>
+</div>
+
+<!-- COMPLETE JAVASCRIPT LOGIC -->
+<script>
+    let currentStudent = 'S1';
+    let audioSpeed = 1.0;
+    let chartInstance = null;
+    let audioUnlocked = false;
+    let availableVoices = [];
+
+    let currentData = {
+        situasi: 'Diminta membaca di depan kelas',
+        emosi: 'Cemas / Gugup',
+        emosiSkala: 7,
+        pikiranAwal: 'Tulisanku jelek dan aku pasti salah membaca...',
+        monster: 'Si Pelabel',
+        keyakinanAwal: 90,
+        buktiMendukung: 'Pernah terbata-bata saat membaca kalimat panjang.',
+        buktiMenentang: 'Pernah membaca 3 baris dengan lancar dan dipuji guru.',
+        pikiranSeimbang: 'Aku belum lancar membaca, tapi dengan latihan pelan-pelan aku bisa lebih baik.',
+        keyakinanAkhir: 30,
+        emosiAkhir: 3,
+        planJika: 'Jika saya diminta membaca di depan kelas',
+        planMaka: 'Saya akan menarik napas dalam & gunakan pikiran seimbang'
+    };
+
+    const dragCardsOriginal = [
+        { id: 'c1', text: "Diminta membaca di depan kelas", category: "situasi" },
+        { id: 'c2', text: "Aku pasti salah dan ditertawakan", category: "pikiran" },
+        { id: 'c3', text: "Dada terasa sesak & malu (8/10)", category: "perasaan" },
+        { id: 'c4', text: "Menundukkan kepala & menolak maju", category: "perilaku" }
+    ];
+
+    let draggedCardId = null;
+    let selectedCardId = null;
+    let placedCards = { situasi: null, pikiran: null, perasaan: null, perilaku: null };
+
+    // INITIALIZE VOICE LIST ON PAGE LOAD
+    function loadVoices() {
+        if ('speechSynthesis' in window) {
+            availableVoices = window.speechSynthesis.getVoices();
+        }
+    }
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+        loadVoices();
+    }
+
+    // UNLOCK AUDIO ENGINE ON FIRST USER CLICK
+    function unlockAudioEngine() {
+        if (audioUnlocked) return;
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.resume();
+            loadVoices();
+            audioUnlocked = true;
+        }
+    }
+
+    // BULLETPROOF TEXT TO SPEECH (TTS) FUNCTION
+    function speakText(text) {
+        if (!('speechSynthesis' in window)) {
+            showToast("Fitur audio tidak didukung oleh perangkat/browser ini.");
+            return;
+        }
+
+        unlockAudioEngine();
+        window.speechSynthesis.resume();
+        window.speechSynthesis.cancel();
+
+        setTimeout(() => {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'id-ID';
+            utterance.rate = audioSpeed || 1.0;
+            utterance.pitch = 1.0;
+            utterance.volume = 1.0;
+
+            // Match Indonesian voice or fallback gracefully
+            const voices = availableVoices.length > 0 ? availableVoices : window.speechSynthesis.getVoices();
+            const indonesianVoice = voices.find(v => v.lang.includes('id') || v.lang.includes('ID') || v.lang.toLowerCase().includes('indonesia'));
+            if (indonesianVoice) {
+                utterance.voice = indonesianVoice;
+            }
+
+            utterance.onerror = (e) => {
+                console.warn("Speech error:", e);
+            };
+
+            window.speechSynthesis.speak(utterance);
+        }, 50);
+    }
+
+    function switchSession(key) {
+        document.querySelectorAll('.session-page').forEach(e => e.classList.add('hidden'));
+        const target = document.getElementById(`session-${key}`);
+        if (target) target.classList.remove('hidden');
+
+        document.querySelectorAll('.nav-tab').forEach(t => {
+            t.classList.remove('bg-indigo-600', 'text-white');
+            t.classList.add('text-slate-300');
+        });
+        const nav = document.getElementById(`nav-sesi-${key}`);
+        if (nav) {
+            nav.classList.add('bg-indigo-600', 'text-white');
+            nav.classList.remove('text-slate-300');
+        }
+
+        if (key === 6) setTimeout(initChart, 150);
+        if (key === 'journal') renderJournal();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function changeStudentProfile() {
+        currentStudent = document.getElementById('studentSelect').value;
+        renderJournal();
+        showToast(`Profil beralih ke ${currentStudent}`);
+    }
+
+    function toggleAudioSpeed() {
+        audioSpeed = audioSpeed === 1.0 ? 0.8 : (audioSpeed === 0.8 ? 1.2 : 1.0);
+        document.getElementById('speedLabel').innerText = `${audioSpeed.toFixed(1)}x`;
+        showToast(`Kecepatan audio pembaca: ${audioSpeed.toFixed(1)}x`);
+    }
+
+    function startVoiceInput(inputId) {
+        const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRec) {
+            showToast("Speech Recognition tidak didukung di browser ini. Gunakan keyboard.");
+            return;
+        }
+        const rec = new SpeechRec();
+        rec.lang = 'id-ID';
+        showToast("🎙️ Mendengarkan suara...");
+        rec.onresult = (e) => {
+            document.getElementById(inputId).value = e.results[0][0].transcript;
+            showToast("Teks berhasil dicatat!");
+        };
+        rec.start();
+    }
+
+    function selectPresetSituation(sit) {
+        document.getElementById('inputSituasi').value = sit;
+        currentData.situasi = sit;
+        speakText(`Situasi: ${sit}`);
+    }
+
+    function selectMonster(name) {
+        currentData.monster = name;
+        document.getElementById('selectedMonsterDisplay').innerText = name;
+        speakText(`Monster terpilih: ${name}`);
+    }
+
+    function updateBeliefValue(val) {
+        currentData.keyakinanAwal = parseInt(val);
+        document.getElementById('beliefValueDisplay').innerText = `${val}%`;
+    }
+
+    function selectDetectivePreset(num) {
+        const data = {
+            1: { title: "Membaca di Depan Kelas", sup: "Pernah terbata-bata saat membaca kalimat panjang.", con: "Pernah membaca 3 baris dengan lancar dan dipuji guru." },
+            2: { title: "Menulis di Papan Tulis", sup: "Pernah ada salah eja huruf saat menulis di papan.", con: "Guru dan teman membantu membenarkan ejaan dengan sabar." },
+            3: { title: "Mengerjakan Kuis", sup: "Pernah selesai mengerjakan paling akhir.", con: "Hasil kuis tetap bagus meskipun butuh waktu." },
+            4: { title: "Menjawab Pertanyaan Guru", sup: "Pernah terdiam sebentar sebelum menjawab.", con: "Guru memuji jawaban yang sudah benar." }
+        }[num];
+
+        if (data) {
+            document.getElementById('inputBuktiMendukung').value = data.sup;
+            document.getElementById('inputBuktiMenentang').value = data.con;
+            currentData.buktiMendukung = data.sup;
+            currentData.buktiMenentang = data.con;
+
+            speakText(`Situasi ${num}: ${data.title}. Bukti mendukung: ${data.sup}. Bukti menentang: ${data.con}`);
+        }
+    }
+
+    function generateBalancedThoughtSuggestion() {
+        const sug = "Aku memang belum lancar membaca, tapi aku sudah bisa menyelesaikan tugas dengan latihan pelan-pelan.";
+        document.getElementById('inputPikiranSeimbang').value = sug;
+        currentData.pikiranSeimbang = sug;
+        speakText(sug);
+    }
+
+    function initChart() {
+        const ctx = document.getElementById('progressChart');
+        if (!ctx) return;
+        if (chartInstance) chartInstance.destroy();
+
+        chartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Keyakinan Buruk (%)', 'Emosi Negatif (Skala x10)'],
+                datasets: [
+                    { label: 'Awal Merugikan', data: [currentData.keyakinanAwal || 90, (currentData.emosiSkala || 7)*10], backgroundColor: 'rgba(244, 63, 94, 0.75)' },
+                    { label: 'Akhir Seimbang', data: [parseInt(document.getElementById('reBeliefSlider').value), parseInt(document.getElementById('reEmoSlider').value)*10], backgroundColor: 'rgba(16, 185, 129, 0.75)' }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { y: { beginAtZero: true, max: 100 } }
+            }
+        });
+    }
+
+    function saveRecordToJournal() {
+        const key = `journal_${currentStudent}`;
+        let list = JSON.parse(localStorage.getItem(key) || '[]');
+        const entry = {
+            id: Date.now(),
+            date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }),
+            student: currentStudent,
+            situasi: document.getElementById('inputSituasi').value || currentData.situasi,
+            pikiranAwal: document.getElementById('inputPikiranAwal').value || currentData.pikiranAwal,
+            monster: currentData.monster,
+            buktiMendukung: document.getElementById('inputBuktiMendukung').value || currentData.buktiMendukung,
+            buktiMenentang: document.getElementById('inputBuktiMenentang').value || currentData.buktiMenentang,
+            pikiranSeimbang: document.getElementById('inputPikiranSeimbang').value || currentData.pikiranSeimbang,
+            keyakinanAwal: currentData.keyakinanAwal,
+            keyakinanAkhir: parseInt(document.getElementById('reBeliefSlider').value),
+            planJika: document.getElementById('planJika').value,
+            planMaka: document.getElementById('planMaka').value
+        };
+        list.unshift(entry);
+        localStorage.setItem(key, JSON.stringify(list));
+        showToast(`✅ Data disimpan ke Jurnal ${currentStudent}!`);
+        renderJournal();
+    }
+
+    function renderJournal() {
+        const container = document.getElementById('journalContainer');
+        if (!container) return;
+        const list = JSON.parse(localStorage.getItem(`journal_${currentStudent}`) || '[]');
+        if (list.length === 0) {
+            container.innerHTML = `<p class="text-xs text-slate-400 text-center py-6 font-extrabold">Belum ada catatan jurnal tersimpan untuk ${currentStudent}.</p>`;
+            return;
+        }
+        container.innerHTML = list.map(e => `
+            <div class="bg-white p-5 rounded-2xl border text-xs font-bold space-y-2 soft-shadow">
+                <div class="flex justify-between text-indigo-600 font-extrabold">
+                    <span>📅 ${e.date}</span>
+                    <span>👾 ${e.monster}</span>
+                </div>
+                <p class="text-slate-800"><strong>📍 Situasi Pemicu:</strong> ${e.situasi}</p>
+                <p class="text-rose-600"><strong>🧠 Pikiran Buruk Awal (${e.keyakinanAwal}%):</strong> "${e.pikiranAwal}"</p>
+                <p class="text-emerald-700"><strong>🌿 Pikiran Seimbang Akhir (${e.keyakinanAkhir}%):</strong> "${e.pikiranSeimbang}"</p>
+                <div class="bg-slate-50 p-2.5 rounded-xl border text-[11px] text-slate-600">
+                    ⚡ <strong>Rencana Koping:</strong> ${e.planJika} ➔ ${e.planMaka}
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function printStudentReport(studentId) {
+        const list = JSON.parse(localStorage.getItem(`journal_${studentId}`) || '[]');
+        if (list.length === 0) {
+            showToast("Belum ada data jurnal untuk dicetak.");
+            return;
+        }
+
+        const printWin = window.open('', '_blank');
+        printWin.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Laporan Rekapitulasi - ${studentId}</title>
+                <style>
+                    body { font-family: 'Segoe UI', sans-serif; padding: 30px; font-size: 12px; color: #1e293b; }
+                    .hdr { text-align: center; border-bottom: 2px solid #4f46e5; padding-bottom: 12px; margin-bottom: 20px; }
+                    .hdr h2 { margin: 0; font-size: 18px; color: #1e1b4b; }
+                    .hdr h4 { margin: 4px 0 0 0; font-size: 13px; color: #4338ca; }
+                    .box { border: 1px solid #cbd5e1; padding: 14px; border-radius: 10px; margin-bottom: 12px; background: #f8fafc; }
+                    .chart-wrapper { text-align: center; margin: 20px 0; padding: 15px; border: 1px dashed #6366f1; border-radius: 12px; }
+                    .legend { font-size: 9px; margin-top: 8px; font-weight: bold; }
+                </style>
+            </head>
+            <body>
+                <div class="hdr">
+                    <h2>SMP NEGERI 1 KOTAANYAR</h2>
+                    <h4>LAPORAN INTERVENSI RESTRUKTURISASI KOGNITIF</h4>
+                    <p style="font-size: 11px; margin-top: 5px; color: #64748b;">Pengembang Media: Nur Kistin Kamalia, S.Psi.</p>
+                </div>
+
+                <p>Kode Siswa: <strong>${studentId}</strong> | Tanggal Cetak: <strong>${new Date().toLocaleDateString('id-ID')}</strong></p>
+
+                <div class="chart-wrapper">
+                    <h4 style="margin: 0 0 10px 0; font-size: 11px; color: #334155;">DIAGRAM PERUBAHAN KEYAKINAN PIKIRAN BURUK VS SEIMBANG</h4>
+                    <svg width="320" height="110" viewBox="0 0 320 110">
+                        <rect x="60" y="20" width="50" height="60" fill="#f43f5e" rx="4"/>
+                        <text x="85" y="15" font-size="8.5" font-weight="bold" fill="#f43f5e" text-anchor="middle">Awal (90%)</text>
+                        <rect x="210" y="55" width="50" height="25" fill="#10b981" rx="4"/>
+                        <text x="235" y="50" font-size="8.5" font-weight="bold" fill="#10b981" text-anchor="middle">Akhir (30%)</text>
+                        <line x1="20" y1="80" x2="300" y2="80" stroke="#94a3b8" stroke-width="1.5"/>
+                    </svg>
+                    <div class="legend">
+                        <span style="color: #f43f5e;">■ Keyakinan Buruk Awal</span> &nbsp;&nbsp;&nbsp;&nbsp;
+                        <span style="color: #10b981;">■ Keyakinan Seimbang Akhir</span>
+                    </div>
+                </div>
+
+                ${list.map(r => `
+                    <div class="box">
+                        <p><strong>Tanggal Sesi:</strong> ${r.date} | <strong>Monster Distorsi:</strong>${r.monster}</p>
+                        <p><strong>Situasi Pemicu:</strong> ${r.situasi}</p>
+                        <p style="color: #e11d48;"><strong>Pikiran Buruk Awal (${r.keyakinanAwal}%):</strong> "${r.pikiranAwal}"</p>
+                        <p><strong>Bukti Menentang:</strong> ${r.buktiMenentang}</p>
+                        <p style="color: #047857;"><strong>Pikiran Seimbang Baru (${r.keyakinanAkhir}%):</strong> "${r.pikiranSeimbang}"</p>
+                    </div>
+                `).join('')}
+
+                <div style="margin-top: 40px; text-align: right;">
+                    <p>Konselor Sekolah / Peneliti,</p>
+                    <br><br><br>
+                    <p><u><strong>Nur Kistin Kamalia, S.Psi.</strong></u></p>
+                </div>
+
+                <script>
+                    window.onload = function() { window.print(); }
+                <\/script>
+            </body>
+            </html>
+        `);
+        printWin.document.close();
+    }
+
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        document.getElementById('toastMsg').innerText = msg;
+        t.classList.remove('translate-y-20', 'opacity-0');
+        setTimeout(() => t.classList.add('translate-y-20', 'opacity-0'), 2500);
+    }
+
+    // DRAG AND DROP HANDLERS
+    function renderDragGame() {
+        const pool = document.getElementById('dragCardPool');
+        if (!pool) return;
+        const placedIds = Object.values(placedCards).filter(Boolean).map(c => c.id);
+        const available = dragCardsOriginal.filter(c => !placedIds.includes(c.id));
+
+        pool.innerHTML = available.map(c => `
+            <div draggable="true" ondragstart="handleDragStart(event, '${c.id}')" onclick="selectCardForTap('${c.id}')" class="p-3 bg-slate-100 hover:bg-slate-200 border rounded-2xl font-bold text-xs cursor-pointer flex justify-between items-center transition soft-shadow">
+                <span>${c.text}</span>
+                <button onclick="event.stopPropagation(); speakText('${c.text}')" class="text-indigo-600 p-1"><i class="fa-solid fa-volume-high"></i></button>
+            </div>
+        `).join('');
+
+        updateDragGameScore();
+    }
+
+    function handleDragStart(e, id) { draggedCardId = id; e.dataTransfer.setData("text", id); }
+    function allowDrop(e) { e.preventDefault(); }
+    function handleDrop(e, cat) { e.preventDefault(); placeCardToCategory(e.dataTransfer.getData("text") || draggedCardId, cat); }
+    function selectCardForTap(id) { selectedCardId = id; showToast("Klik kotak kategori di bawah untuk menempel!"); }
+    function handleZoneClick(cat) { if(selectedCardId) { placeCardToCategory(selectedCardId, cat); selectedCardId = null; } }
+
+    function placeCardToCategory(id, cat) {
+        const card = dragCardsOriginal.find(c => c.id === id);
+        if (!card) return;
+        placedCards[cat] = card;
+        if (card.category === cat) speakText(`Tepat sekali! ${card.text} adalah ${cat}.`);
+        renderDragGame();
+    }
+
+    function resetDragGame() { placedCards = { situasi: null, pikiran: null, perasaan: null, perilaku: null }; renderDragGame(); }
+
+    function updateDragGameScore() {
+        let count = 0;
+        Object.keys(placedCards).forEach(k => { if(placedCards[k] && placedCards[k].category === k) count++; });
+        document.getElementById('dragScore').innerText = `${count} / 4`;
+        if (count === 4) document.getElementById('dragBadge').classList.remove('hidden');
+    }
+
+    window.onload = function() {
+        renderDragGame();
+        switchSession('welcome');
+        loadVoices();
+    };
+</script>
