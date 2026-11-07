@@ -1,0 +1,56 @@
+<!-- ... existing code ... -->
+        // UNLOCK AUDIO ENGINE ON FIRST USER CLICK
+        function unlockAudioEngine() {
+            if (audioUnlocked) return;
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.resume();
+                loadVoices();
+                audioUnlocked = true;
+            }
+        }
+
+        // BULLETPROOF TEXT TO SPEECH (TTS) FUNCTION FOR MOBILE & DESKTOP
+        function speakText(text) {
+            if (!('speechSynthesis' in window)) {
+                showToast("Fitur audio tidak didukung oleh perangkat/browser ini.");
+                return;
+            }
+
+            // Aktifkan audio engine
+            unlockAudioEngine();
+            
+            // Batalkan pembacaan terdahulu & resume jika paused
+            window.speechSynthesis.cancel();
+            window.speechSynthesis.resume();
+
+            // Buat objek pembacaan teks langsung (tanpa setTimeout agar lolos autoplay HP)
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'id-ID';
+            utterance.rate = audioSpeed || 1.0;
+            utterance.pitch = 1.0;
+            utterance.volume = 1.0;
+
+            // Cari suara Bahasa Indonesia jika tersedia di sistem HP/Browser
+            const voices = availableVoices.length > 0 ? availableVoices : window.speechSynthesis.getVoices();
+            if (voices.length > 0) {
+                const indonesianVoice = voices.find(v => 
+                    v.lang.toLowerCase().includes('id') || 
+                    v.lang.toLowerCase().includes('indonesia') ||
+                    v.name.toLowerCase().includes('indonesia')
+                );
+                if (indonesianVoice) {
+                    utterance.voice = indonesianVoice;
+                }
+            }
+
+            utterance.onerror = (e) => {
+                console.warn("Speech synthesis error:", e);
+                showToast("Suara terhenti / tidak dapat diputar di browser ini.");
+            };
+
+            // Jalankan pembacaan suara secara instan
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function switchSession(key) {
+<!-- ... existing code -->
